@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from .models import Order
+from .models.order import Order
 from .forms import OrderSimpleForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse

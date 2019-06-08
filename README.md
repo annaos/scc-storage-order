@@ -10,6 +10,12 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Django.
 pip install Django==2.2.1
 ```
 
+Install Shibboleth
+
+```bash
+pip install git+https://github.com/Brown-University-Library/django-shibboleth-remoteuser.git
+```
+
 ## Usage
 
 ```bash

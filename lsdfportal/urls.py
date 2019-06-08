@@ -19,4 +19,5 @@ from django.urls import include, path
 urlpatterns = [
     path('order/', include('order.urls')),
     path('admin/', admin.site.urls),
+    path('shib/', include('shibboleth.urls', namespace='shibboleth')),
 ]

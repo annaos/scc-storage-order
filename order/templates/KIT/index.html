@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content-wrapper %}
+    {% if latest_order_list %}
+        <h3>Your orders:</h3>
+        <ul>
+            {% for order in latest_order_list %}
+                <li>
+                    <a href="{% url 'order:detail' order.id %}">{{ order }}</a>
+                    <a href="{% url 'order:edit' order.id %}" class="kit-ca-ui-button">Edit</a>
+                    <a href="{% url 'order:comment' order.id %}" class="kit-ca-ui-button">Add comment</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No requests are available.</p>
+    {% endif %}
+
+    <a href="{% url 'order:new' %}" class="kit-ca-ui-button bigger box-left-to-right">New request</a>
+{% endblock %}

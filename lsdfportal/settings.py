@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'shibboleth',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +48,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'shibboleth.middleware.ShibbolethRemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -63,13 +66,29 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'shibboleth.context_processors.login_link',
+                'shibboleth.context_processors.logout_link',
             ],
         },
     },
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 WSGI_APPLICATION = 'lsdfportal.wsgi.application'
 
+AUTHENTICATION_BACKENDS = (
+    'shibboleth.backends.ShibbolethRemoteUserBackend',
+)
+
+SHIBBOLETH_ATTRIBUTE_MAP = {
+    "shib-user": (True, "username"),
+    "shib-given-name": (True, "firstname"),
+    "shib-sn": (True, "lastname"),
+    "shib-mail": (True, "email"),
+}
+
+LOGIN_URL = 'https://idp.scc.kit.edu/idp/profile/SAML2/Redirect/SSO'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

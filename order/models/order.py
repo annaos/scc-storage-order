@@ -2,13 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 
-class Person(models.Model):
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
-    institute = models.CharField(max_length=100)
-    email = models.EmailField(max_length=50)
-
-
 class Order(models.Model):
     NEW = 'NEW'
     PENDING = 'PENDING'
@@ -28,18 +21,16 @@ class Order(models.Model):
         (PERMISSION_READ_WRITE, 'Read/Write'),
     )
 
-    submitter = models.CharField(max_length=50)
+    submitter = models.CharField(max_length=50) #TODO delete
     project_name = models.CharField(max_length=150)
-    customer1 = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='order1')
-    customer2 = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='order2', null=True, blank=True)
     abstract = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     end_date = models.DateField()
     capacity = models.PositiveIntegerField()
     directory_name = models.CharField(max_length=50)
-    protocol_ssh = models.BooleanField(verbose_name='SSH')
-    protocol_sftp = models.BooleanField(verbose_name='SFTP')
-    protocol_scp = models.BooleanField()
+    protocol_ssh = models.BooleanField(verbose_name='SSH', default=True)
+    protocol_sftp = models.BooleanField(verbose_name='SFTP', default=True)
+    protocol_scp = models.BooleanField(default=True)
     protocol_cifs = models.BooleanField()
     protocol_nfs = models.BooleanField()
     nfs_network = models.CharField(max_length=50, null=True, blank=True)
@@ -53,6 +44,7 @@ class Order(models.Model):
     group_cifsacls = models.BooleanField()
 
     create_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True)
     state = models.CharField(
         max_length=50,
         choices=STATE_CHOICES,
