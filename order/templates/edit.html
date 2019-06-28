@@ -19,7 +19,37 @@
           method="post"
     >
         {% csrf_token %}
-        {{ form|crispy }}
+        <div class="row justify-content-center">
+            <div class="col-6">
+                Head Lead
+                {{ form.head_email|as_crispy_field }}
+                {{ form.head_firstname|as_crispy_field }}
+                {{ form.head_lastname|as_crispy_field }}
+            </div>
+            <div class="col-6">
+                Tech Lead
+                {{ form.tech_email|as_crispy_field }}
+                {{ form.tech_firstname|as_crispy_field }}
+                {{ form.tech_lastname|as_crispy_field }}
+            </div>
+        </div>
+
+        {{ form.project_name|as_crispy_field }}
+        {{ form.abstract|as_crispy_field }}
+        {{ form.notes|as_crispy_field }}
+        {{ form.end_date|as_crispy_field }}
+        {{ form.capacity|as_crispy_field }}
+        {{ form.directory_name|as_crispy_field }}
+        {{ form.protocol_ssh|as_crispy_field }}
+        {{ form.protocol_sftp|as_crispy_field }}
+        {{ form.protocol_cifs|as_crispy_field }}
+        {{ form.protocol_nfs|as_crispy_field }}
+        {{ form.nfs_network|as_crispy_field }}
+        {{ form.owner_name|as_crispy_field }}
+        {{ form.group_name|as_crispy_field }}
+        {{ form.group_permission|as_crispy_field }}
+        {{ form.group_cifsacls|as_crispy_field }}
+
         <button type="submit" class="btn btn-success">Submit Storage Proposal</button>
 
     </form>

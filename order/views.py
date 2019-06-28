@@ -1,18 +1,31 @@
 from django.shortcuts import render, get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views import generic
 from .models.order import Order
-from .forms import OrderSimpleForm
+from .forms import OrderSimpleForm, PersonForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.forms import formset_factory
 
 
 class IndexView(generic.ListView):
     template_name = 'index.html'
     context_object_name = 'latest_order_list'
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(IndexView, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        # TODO filter by user if not admin
-        return Order.objects.order_by('-create_date')
+        new_context = Order.objects.order_by('-create_date')
+        # TODO filter by user if not admin / check if it works
+        if self.request.user.is_authenticated:# and not self.request.user.is_superuser:
+            new_context = new_context.filter(
+           #TODO     Q(owner=self.request.user) | Q(head=self.request.user) | Q(tech=self.request.user)
+            )
+        return new_context
 
 
 class DetailView(generic.DetailView):
@@ -20,6 +33,7 @@ class DetailView(generic.DetailView):
     template_name = 'detail.html'
 
 
+@login_required
 def edit(request, pk=None):
     if pk:
         order = get_object_or_404(Order, pk=pk)

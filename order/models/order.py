@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from .person import Person
 
 
 class Order(models.Model):
@@ -21,7 +22,6 @@ class Order(models.Model):
         (PERMISSION_READ_WRITE, 'Read/Write'),
     )
 
-    submitter = models.CharField(max_length=50) #TODO delete
     project_name = models.CharField(max_length=150)
     abstract = models.TextField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
@@ -50,12 +50,16 @@ class Order(models.Model):
         choices=STATE_CHOICES,
         default=NEW,
     )
+    persons = models.ManyToManyField(
+        Person,
+        through='PersonOrder',
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)ss",
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.create_date = timezone.now()
-        # TODO what is it??
-        self.submitter = ""
 
     def __str__(self):
         return self.project_name
@@ -68,3 +72,23 @@ class Order(models.Model):
 
     def is_approved(self):
         return self.state == self.APPROVED
+
+    def owner(self):
+        from .personorder import PersonOrder
+        return self.__get_person(PersonOrder.ROLE_OWNER)
+
+    def head(self):
+        from .personorder import PersonOrder
+        return self.__get_person(PersonOrder.ROLE_HEAD)
+
+    def tech(self):
+        from .personorder import PersonOrder
+        return self.__get_person(PersonOrder.ROLE_TECH)
+
+    def __get_person(self, role):
+        from .personorder import PersonOrder
+        #TODO if you want more persons with same role, make here tuple
+        person_order = PersonOrder.objects.filter(order=self).filter(role=role).first()
+        if person_order is None:
+            return None
+        return person_order.person

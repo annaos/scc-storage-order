@@ -88,7 +88,8 @@ SHIBBOLETH_ATTRIBUTE_MAP = {
     "shib-mail": (True, "email"),
 }
 
-LOGIN_URL = 'https://idp.scc.kit.edu/idp/profile/SAML2/Redirect/SSO'
+LOGIN_URL = 'https://wayf.aai.dfn.de/DFN-AAI/wayf'
+#LOGIN_URL = 'http://127.0.0.1:8000/admin/login/'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

@@ -58,29 +58,27 @@
                 <div id="key-visual">
                     <a href="https://www.scc.kit.edu/index.php"><img copyright="" src="https://www.scc.kit.edu/img/oko/scc_hdbg_re_V2.jpg" alt="Logo Steinbuch Centre for Computing (SCC)"></a>
                 </div>
-                <div id="head-text" class="big_font" style="height: 30px !important;"><a style="font-size: 12px;" href="https://www.scc.kit.edu/index.php">Steinbuch Centre for Computing (SCC)</a></div>
+                <div id="head-text" class="big_font" style="height: 32px !important;"><a style="font-size: 12px;" href="https://www.scc.kit.edu/index.php">Steinbuch Centre for Computing (SCC)</a></div>
                 <div id="head-text-corner">&nbsp;</div>
             </div>
         </div>
         <!-- Head: end -->
 
         <!-- Spacer: start -->
-        <div class="spacer">
+        <div class="spacer" style="border-right:none;">
             <!-- -->
         </div>
         <!-- Spacer: end -->
 
         <!-- Container: start -->
 
-        <div style="margin: 0px 40px;">
-            <div class="container" style="background-color: #fff;">
-              <div class="row justify-content-center">
-                <div class="col-12">
-                    {% block content-wrapper %}
-                    {% endblock %}
-                </div>
-              </div>
+        <div id="wrapper-content" class="container" style="background-color: #fff;margin: 0px 27px; width: 960px;">
+          <div class="row justify-content-center">
+            <div class="col-12">
+                {% block content-wrapper %}
+                {% endblock %}
             </div>
+          </div>
         </div>
         <!-- Container: end -->
     </div>
@@ -92,6 +90,8 @@
         if (typeof(disable_faq) != 'boolean') {
             collapseFAQ();
         }
+        height = $("#wrapper").outerHeight() - $("#head").outerHeight() - 8 - $(".spacer").outerHeight();
+        $("#wrapper-content").css("height", height);
     </script>
 {% endblock %}
 </body>
