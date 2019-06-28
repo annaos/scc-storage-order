@@ -15,15 +15,13 @@ class PersonForm(forms.Form):
 
 
 class OrderSimpleForm(ModelForm):
-#    head_person_form_set = PersonForm()
-#    tech_person_form_set = PersonForm()
-    head_email = forms.EmailField(max_length=100)
-    head_firstname = forms.CharField(max_length=100, required=False)
-    head_lastname = forms.CharField(max_length=100, required=False)
+    head_email = forms.EmailField(max_length=100, label='Email')
+    head_firstname = forms.CharField(max_length=100, required=False, label='Firstname')
+    head_lastname = forms.CharField(max_length=100, required=False, label='Lastname')
 
-    tech_email = forms.EmailField(max_length=100)
-    tech_firstname = forms.CharField(max_length=100, required=False)
-    tech_lastname = forms.CharField(max_length=100, required=False)
+    tech_email = forms.EmailField(max_length=100, label='Email')
+    tech_firstname = forms.CharField(max_length=100, required=False, label='Firstname')
+    tech_lastname = forms.CharField(max_length=100, required=False, label='Lastname')
 
 
     class Meta:
@@ -77,7 +75,21 @@ class OrderSimpleForm(ModelForm):
                 PersonOrder.objects.create(person=person, order=order, role=role)
 
 
-class EditOrderForm(OrderSimpleForm):
+class OrderEditForm(OrderSimpleForm):
     def __init__(self, *args, **kwargs):
-        super(EditOrderForm, self).__init__(*args, **kwargs)
+        super(OrderEditForm, self).__init__(*args, **kwargs)
         self.fields['project_name'].disabled = True
+        self.fields['abstract'].disabled = True
+        self.fields['notes'].disabled = True
+        self.fields['end_date'].disabled = True
+        self.fields['capacity'].disabled = True
+        self.fields['directory_name'].disabled = True
+        self.fields['protocol_ssh'].disabled = True
+        self.fields['protocol_sftp'].disabled = True
+        self.fields['protocol_cifs'].disabled = True
+        self.fields['protocol_nfs'].disabled = True
+        self.fields['nfs_network'].disabled = True
+        self.fields['owner_name'].disabled = True
+        self.fields['group_name'].disabled = True
+        self.fields['group_permission'].disabled = True
+        self.fields['group_cifsacls'].disabled = True

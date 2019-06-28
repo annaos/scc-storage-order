@@ -19,7 +19,6 @@ from . import views
 app_name = 'order'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('<int:pk>/edit/', views.edit, name='edit'),
     path('<int:pk>/comment/', views.comment, name='comment'),
     path('new/', views.edit, name='new'),

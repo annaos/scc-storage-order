@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import generic
 from .models.order import Order
-from .forms import OrderSimpleForm, PersonForm
+from .forms import *
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -28,31 +28,28 @@ class IndexView(generic.ListView):
         return new_context
 
 
-class DetailView(generic.DetailView):
-    model = Order
-    template_name = 'detail.html'
-
-
 @login_required
 def edit(request, pk=None):
     if pk:
         order = get_object_or_404(Order, pk=pk)
+        form_class = OrderEditForm
         # TODO check if user has right to edit. if not:
         # return HttpResponseForbidden()
     else:
         order = Order()
+        form_class = OrderSimpleForm
 
     context = {'pk': pk}
     if request.method == "POST":
-        form = OrderSimpleForm(request.POST, instance=order)
+        form = form_class(request.POST, instance=order)
         if form.is_valid():
             order = form.save()
             # TODO success flash message
-            return HttpResponseRedirect(reverse('order:detail', args=(order.id,)))
+            return HttpResponseRedirect(reverse('order:edit', args=(order.id,)))
         else:
             context['error_message'] = "Form invalid"
     else:
-        form = OrderSimpleForm(instance=order)
+        form = form_class(instance=order)
     context['form'] = form
     return render(request, 'edit.html', context)
 

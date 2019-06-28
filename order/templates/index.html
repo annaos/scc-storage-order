@@ -2,16 +2,25 @@
 
 {% block content-wrapper %}
     {% if latest_order_list %}
-        <h3>Your orders:</h3>
-        <ul>
+        <h3>Storage projects:</h3>
+        <table>
             {% for order in latest_order_list %}
-                <li>
-                    <a href="{% url 'order:detail' order.id %}">{{ order }}</a>
-                    <a href="{% url 'order:edit' order.id %}" class="kit-ca-ui-button">Edit</a>
-                    <a href="{% url 'order:comment' order.id %}" class="kit-ca-ui-button">Add comment</a>
-                </li>
+                <tr>
+                    <td style="padding-right: 50px;">
+                        <a href="{% url 'order:edit' order.id %}">{{ order }}</a>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p>{{ order.head.firstname }} {{ order.head.lastname }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p>{{ order.head.institute }}</p>
+                    </td>
+                    <td>
+                        <a href="{% url 'order:comment' order.id %}">Add comment</a>
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
     {% else %}
         <p>No requests are available.</p>
     {% endif %}
