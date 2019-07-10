@@ -16,6 +16,11 @@ Install Shibboleth
 pip install git+https://github.com/Brown-University-Library/django-shibboleth-remoteuser.git
 ```
 
+Install django-crispy-forms:
+```bash
+pip install django-crispy-forms
+```
+
 ## Usage
 
 ```bash
