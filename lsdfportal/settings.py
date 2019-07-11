@@ -11,21 +11,19 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7)%(x(a76ji_cebx+pfs==(0yb#ibo9vz@-m!9vn2u&xs+6ng1'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www-test.lsdf.kit.edu', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -78,7 +76,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 WSGI_APPLICATION = 'lsdfportal.wsgi.application'
 
 AUTHENTICATION_BACKENDS = (
-    'shibboleth.backends.ShibbolethRemoteUserBackend',
+    config('AUTHENTICATION_BACKENDS', default='django.contrib.auth.backends.ModelBackend'),
 )
 
 SHIBBOLETH_ATTRIBUTE_MAP = {
@@ -88,16 +86,18 @@ SHIBBOLETH_ATTRIBUTE_MAP = {
     "shib-mail": (True, "email"),
 }
 
-LOGIN_URL = 'https://wayf.aai.dfn.de/DFN-AAI/wayf'
-#LOGIN_URL = 'http://127.0.0.1:8000/admin/login/'
+LOGIN_URL = config('LOGIN_URL', default='http://127.0.0.1:8000/admin/login/')
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config('DATABASE_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': config('DATABASE_NAME', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': config('DATABASE_USER', default=''),
+        'PASSWORD': config('DATABASE_PASSWORD', default=''),
+        'HOST': config('DATABASE_HOST', default=''),
+        'PORT': config('DATABASE_PORT', default=''),
     }
 }
 

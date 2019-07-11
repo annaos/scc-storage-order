@@ -21,6 +21,11 @@ Install django-crispy-forms:
 pip install django-crispy-forms
 ```
 
+Install python-decouple to organize settings:
+```bash
+pip install python-decouple
+```
+
 ## Usage
 
 ```bash
