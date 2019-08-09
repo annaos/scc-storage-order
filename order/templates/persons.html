@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content-wrapper %}
+    {% if persons_list %}
+        <table class="table table-striped">
+        <thead>
+        <tr>
+           <td scope="col">Username</td>
+           <td scope="col">Name</td>
+           <td scope="col">Institute</td>
+           <td scope="col">Email</td>
+           <td scope="col">Aktion</td>
+        </tr>
+        </thead>
+            <tbody>
+            {% for person in persons_list %}
+                <tr {% if person.admin %}class="text-danger"{% endif %}>
+                    <td style="padding-right: 50px;">
+                        <p style="margin: 5px 0;">{{ person.username }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p style="margin: 5px 0;">{{ person.firstname }} {{ person.lastname }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p style="margin: 5px 0;">{{ person.institute }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p style="margin: 5px 0;">{{ person.email }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <a href="{% url 'order:persons-admin' person.id %}">
+                            {% if person.admin %}
+                                remove admin rights
+                            {% else %}
+                                add admin rights
+                            {% endif %}
+                        </a>
+                   </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No persons are available.</p>
+    {% endif %}
+
+    <a href="{% url 'order:index' %}" class="kit-ca-ui-button bigger box-left-to-right">Home</a>
+
+{% endblock %}

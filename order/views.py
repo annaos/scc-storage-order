@@ -23,9 +23,35 @@ class IndexView(generic.ListView):
         # TODO filter by user if not admin / check if it works
         if self.request.user.is_authenticated:# and not self.request.user.is_superuser:
             new_context = new_context.filter(
+           #TODO     Q(person=self.request.user)
            #TODO     Q(owner=self.request.user) | Q(head=self.request.user) | Q(tech=self.request.user)
             )
         return new_context
+
+
+class PersonsView(generic.ListView):
+    template_name = 'persons.html'
+    context_object_name = 'persons_list'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(PersonsView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Person.objects.order_by('-id')
+
+
+@login_required
+def personadmin(request, pk):
+    person = get_object_or_404(Person, pk=pk)
+    # TODO check if user has right to edit. if not:
+    # return HttpResponseForbidden() + flashMessage
+    if person.admin:
+        person.admin = False
+    else:
+        person.admin = True
+    person.save()
+    return HttpResponseRedirect(reverse('order:persons'))
 
 
 @login_required

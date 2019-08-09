@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block add-js %}
+    $(function () {
+        $("#id_end_date").datepicker({ dateFormat: 'dd-mm-yy' });
+    });
+{% endblock %}
+
 {% block content-wrapper %}
     <h1 class="mt-2">
         {% if pk %}
@@ -20,9 +26,11 @@
     >
         {% csrf_token %}
 
+        <h2>Project information</h2>
         {{ form.project_name|as_crispy_field }}
 
-        <div class="row justify-content-center border border-dark">
+        <h2>Contacts</h2>
+        <div class="row justify-content-center">
             <div class="col-6">
                 Head of the project
                 {{ form.head_email|as_crispy_field }}
@@ -37,17 +45,22 @@
             </div>
         </div>
 
+        <h2>Project details</h2>
         {{ form.abstract|as_crispy_field }}
         {{ form.notes|as_crispy_field }}
         {{ form.end_date|as_crispy_field }}
         {{ form.capacity|as_crispy_field }}
         {{ form.directory_name|as_crispy_field }}
+
+        <h2>Protocols</h2>
         {{ form.protocol_ssh|as_crispy_field }}
         {{ form.protocol_sftp|as_crispy_field }}
         {{ form.protocol_cifs|as_crispy_field }}
+        {{ form.protocol_scp|as_crispy_field }}
         {{ form.protocol_nfs|as_crispy_field }}
         {{ form.nfs_network|as_crispy_field }}
 
+        <h2>Access control</h2>
         <div class="row justify-content-center">
             <div class="col-6">
                 {{ form.owner_name|as_crispy_field }}

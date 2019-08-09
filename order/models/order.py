@@ -30,10 +30,10 @@ class Order(models.Model):
     directory_name = models.CharField(max_length=50)
     protocol_ssh = models.BooleanField(verbose_name='SSH', default=True)
     protocol_sftp = models.BooleanField(verbose_name='SFTP', default=True)
-    protocol_scp = models.BooleanField(default=True)
-    protocol_cifs = models.BooleanField()
-    protocol_nfs = models.BooleanField()
-    nfs_network = models.CharField(max_length=50, null=True, blank=True)
+    protocol_scp = models.BooleanField(verbose_name='SCP', default=True)
+    protocol_cifs = models.BooleanField(verbose_name='CIFS')
+    protocol_nfs = models.BooleanField(verbose_name='NFS')
+    nfs_network = models.CharField(max_length=50, null=True, blank=True, verbose_name='NFS V3 (Client needs to be connected to KIT-IDM)')
     owner_name = models.CharField(max_length=50)
     group_name = models.CharField(max_length=50)
     group_permission = models.CharField(
@@ -41,7 +41,7 @@ class Order(models.Model):
         choices=PERMISSION_CHOICES,
         default=PERMISSION_NONE,
     )
-    group_cifsacls = models.BooleanField()
+    group_cifsacls = models.BooleanField(verbose_name='CIFS ACLs')
 
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True)

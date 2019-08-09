@@ -30,7 +30,13 @@ class OrderSimpleForm(ModelForm):
 #                  'owner_name', 'group_name', 'group_permission', 'group_cifsacls', 'headPersonEmail', 'headPersonFirstname', 'headPersonLastname']
         exclude = ['state', 'create_date', 'modify_date', 'persons']
         help_texts = {
-            'abstract': 'Describe your project.',
+            'abstract': 'Describe your project',
+            'end_date': 'End of the project',
+            'capacity': 'Expected storage capacity in TB (1 TB = 1000 GB)',
+            'directory_name': 'What should be the name of the project directory? We recommend using a short project acronmy. Allowed characters are "a-z 0-9 _ -"',
+            'nfs_network': 'NFS Client networks',
+            'owner_name': 'Who should be the owner the project directory? The owner can be a KIT user (e.g. ab1234) or a KIT service account (e.g. OE-ProjectName-0001). Please, contact your ITB to create a service account.',
+            'group_name': 'Which group should get access to your project directory (e.g. OE-ProjectName-LSDF)? Please, leave this field empty if you don\'t want to share your data or contact your ITB to create a group',
         }
 
     def __init__(self, *args, **kwargs):

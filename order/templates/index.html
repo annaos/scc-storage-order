@@ -3,27 +3,45 @@
 {% block content-wrapper %}
     {% if latest_order_list %}
         <h3>Storage projects:</h3>
-        <table>
+        <table class="table table-striped">
+        <thead>
+        <tr>
+           <th scope="col">Project name</th>
+           <th scope="col">Head of project</th>
+           <th scope="col">Institute</th>
+           <th scope="col">Capacity</th>
+           <th scope="col">Action</th>
+        </tr>
+        </thead>
+            <tbody>
             {% for order in latest_order_list %}
-                <tr>
+                <tr {% if order.is_approved %}class="bg-success"{% endif %}{% if order.is_pending %}class="bg-warning"{% endif %} >
                     <td style="padding-right: 50px;">
                         <a href="{% url 'order:edit' order.id %}">{{ order }}</a>
                     </td>
                     <td style="padding-right: 50px; margin: 0">
-                        <p>{{ order.head.firstname }} {{ order.head.lastname }}</p>
+                        <p style="margin: 5px 0;">{{ order.head.firstname }} {{ order.head.lastname }}</p>
                     </td>
                     <td style="padding-right: 50px; margin: 0">
-                        <p>{{ order.head.institute }}</p>
+                        <p style="margin: 5px 0;">{{ order.head.institute }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p style="margin: 5px 0;">{{ order.capacity }}</p>
                     </td>
                     <td>
                         <a href="{% url 'order:comment' order.id %}">Add comment</a>
                     </td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p>No requests are available.</p>
     {% endif %}
 
     <a href="{% url 'order:new' %}" class="kit-ca-ui-button bigger box-left-to-right">New request</a>
+    {# TODO user.is_superuser? #}
+    {% if user.is_superuser %}
+        <a href="{% url 'order:persons' %}" class="kit-ca-ui-button bigger box-left-to-right">List of users</a>
+    {% endif %}
 {% endblock %}

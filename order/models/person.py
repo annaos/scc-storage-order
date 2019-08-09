@@ -8,6 +8,7 @@ class Person(models.Model):
     lastname = models.CharField(max_length=50)
     institute = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(max_length=50)
+    admin = models.BooleanField(null=True)
 
     orders = models.ManyToManyField(
         'order.Order',

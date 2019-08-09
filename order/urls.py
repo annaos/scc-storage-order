@@ -22,4 +22,6 @@ urlpatterns = [
     path('<int:pk>/edit/', views.edit, name='edit'),
     path('<int:pk>/comment/', views.comment, name='comment'),
     path('new/', views.edit, name='new'),
+    path('persons/', views.PersonsView.as_view(), name='persons'),
+    path('persons/<int:pk>', views.personadmin, name='persons-admin'),
 ]
