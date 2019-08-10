@@ -16,10 +16,12 @@ class PersonForm(forms.Form):
 
 class OrderSimpleForm(ModelForm):
     head_email = forms.EmailField(max_length=100, label='Email')
-    head_firstname = forms.CharField(max_length=100, required=False, label='Firstname')
-    head_lastname = forms.CharField(max_length=100, required=False, label='Lastname')
+    head_institute = forms.CharField(max_length=300, required=False, label='Institute')
+    head_firstname = forms.CharField(max_length=100, required=True, label='Firstname')
+    head_lastname = forms.CharField(max_length=100, required=True, label='Lastname')
 
     tech_email = forms.EmailField(max_length=100, label='Email')
+    tech_institute = forms.CharField(max_length=300, required=False, label='Institute')
     tech_firstname = forms.CharField(max_length=100, required=False, label='Firstname')
     tech_lastname = forms.CharField(max_length=100, required=False, label='Lastname')
 
@@ -30,11 +32,12 @@ class OrderSimpleForm(ModelForm):
 #                  'owner_name', 'group_name', 'group_permission', 'group_cifsacls', 'headPersonEmail', 'headPersonFirstname', 'headPersonLastname']
         exclude = ['state', 'create_date', 'modify_date', 'persons']
         help_texts = {
-            'abstract': 'Describe your project',
+            'abstract': 'Please describe the scientific objectives of your project',
+            'notes': 'Please describe your technical requirements',
             'end_date': 'End of the project',
             'capacity': 'Expected storage capacity in TB (1 TB = 1000 GB)',
             'directory_name': 'What should be the name of the project directory? We recommend using a short project acronmy. Allowed characters are "a-z 0-9 _ -"',
-            'nfs_network': 'NFS Client networks',
+            'nfs_network': 'Has to be one or many IPs or Subnets (for example 141.52.000.0/24)',
             'owner_name': 'Who should be the owner the project directory? The owner can be a KIT user (e.g. ab1234) or a KIT service account (e.g. OE-ProjectName-0001). Please, contact your ITB to create a service account.',
             'group_name': 'Which group should get access to your project directory (e.g. OE-ProjectName-LSDF)? Please, leave this field empty if you don\'t want to share your data or contact your ITB to create a group',
         }
@@ -45,11 +48,13 @@ class OrderSimpleForm(ModelForm):
             head_person = kwargs['instance'].head()
             if head_person is not None:
                 initial['head_email'] = head_person.email
+                initial['tech_institute'] = head_person.institute
                 initial['head_firstname'] = head_person.firstname
                 initial['head_lastname'] = head_person.lastname
             tech_person = kwargs['instance'].tech()
             if tech_person is not None:
                 initial['tech_email'] = tech_person.email
+                initial['tech_institute'] = tech_person.institute
                 initial['tech_firstname'] = tech_person.firstname
                 initial['tech_lastname'] = tech_person.lastname
 

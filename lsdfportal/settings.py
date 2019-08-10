@@ -80,11 +80,14 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SHIBBOLETH_ATTRIBUTE_MAP = {
-    "shib-user": (True, "username"),
-    "shib-given-name": (True, "firstname"),
-    "shib-sn": (True, "lastname"),
-    "shib-mail": (True, "email"),
+    "eppn": (True, "username"),
+    "givenName": (True, "first_name"),
+    "sn": (True, "last_name"),
+    "mail": (True, "email"),
+    "SSL_SERVER_S_DN_O": (False, "institute"), #TODO check: maybe it is only ssl owner?
 }
+
+AUTH_USER_MODEL = "order.Person"
 
 LOGIN_URL = config('LOGIN_URL', default='http://127.0.0.1:8000/admin/login/')
 
@@ -105,20 +108,20 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+#AUTH_PASSWORD_VALIDATORS = [
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#    },
+#]
 
 
 # Internationalization

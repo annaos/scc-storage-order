@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block add-js %}
-    $(function () {
-        $("#id_end_date").datepicker({ dateFormat: 'dd-mm-yy' });
-    });
-{% endblock %}
-
 {% block content-wrapper %}
     <h1 class="mt-2">
         {% if pk %}
@@ -32,14 +26,16 @@
         <h2>Contacts</h2>
         <div class="row justify-content-center">
             <div class="col-6">
-                Head of the project
+                <h5>Head of the project</h5>
                 {{ form.head_email|as_crispy_field }}
+                {{ form.head_institute|as_crispy_field }}
                 {{ form.head_firstname|as_crispy_field }}
                 {{ form.head_lastname|as_crispy_field }}
             </div>
             <div class="col-6">
-                Technical contact
+                <h5>Technical contact</h5>
                 {{ form.tech_email|as_crispy_field }}
+                {{ form.tech_institute|as_crispy_field }}
                 {{ form.tech_firstname|as_crispy_field }}
                 {{ form.tech_lastname|as_crispy_field }}
             </div>
@@ -55,10 +51,10 @@
         <h2>Protocols</h2>
         {{ form.protocol_ssh|as_crispy_field }}
         {{ form.protocol_sftp|as_crispy_field }}
-        {{ form.protocol_cifs|as_crispy_field }}
         {{ form.protocol_scp|as_crispy_field }}
+        {{ form.protocol_cifs|as_crispy_field }}
         {{ form.protocol_nfs|as_crispy_field }}
-        {{ form.nfs_network|as_crispy_field }}
+        <div id="div_id_nfs_network_to_collapse">{{ form.nfs_network|as_crispy_field }}</div>
 
         <h2>Access control</h2>
         <div class="row justify-content-center">
@@ -81,4 +77,20 @@
 
     </form>
 
+    <script type="text/javascript">
+        $(function () {
+            // display end_date with calender
+            $("#id_end_date").datepicker({ dateFormat: 'dd.mm.yyyy' });
+
+            // collapse nfs_network field if checkbox not checked
+            $("#div_id_nfs_network_to_collapse").addClass("collapse");
+            {% if nfs_aria_expanded == "true" %}
+                $("#div_id_nfs_network_to_collapse").addClass("show");
+            {% endif %}
+            let nfsCheckbox = $("#id_protocol_nfs")
+            if (!nfsCheckbox.attr("disabled")) {
+                $("#id_protocol_nfs").parent().attr({"data-toggle":"collapse", "data-target":"#div_id_nfs_network_to_collapse", "aria-expanded":"{{ nfs_aria_expanded }}", "aria_controls":"div_id_nfs_network_to_collapse"});
+            }
+        });
+    </script>
 {% endblock %}

@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="de-de">
 
@@ -13,8 +15,6 @@
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
-    <link rel="stylesheet" href="https://static.scc.kit.edu/fancybox/dist/jquery.fancybox.min.css" />
-    <link rel="stylesheet" href="https://static.scc.kit.edu/font-awesome/css/font-awesome.min.css">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="Description" content="SCC - wissenschaftliches Rechenzentrum und modernes IT-Service-Zentrum mit eigener Forschung und Entwicklung" />
     <meta name="Keywords" content="Wissenschaftliches Rechenzentrum, High Performance Computing, HPC, Data Intensive Computing, DIC, Scientific Computing, Simulation, Grid Computing, Cloud Computing, Large-Scale Data Management &amp; Analysis, SCC, KIT" />
@@ -24,13 +24,15 @@
     <link rel="shortcut icon" type="image/x-icon" href="https://www.scc.kit.edu/img/ivi/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="https://www.scc.kit.edu/31.php" />
     <link rel="stylesheet" type="text/css" href="https://www.scc.kit.edu/7.php_content_schriftgroesse_1.1em.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://www.scc.kit.edu/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://static.scc.kit.edu/fancybox/dist/jquery.fancybox.min.js"></script>
-    <script type="text/javascript" src="https://www.scc.kit.edu/img/intern/jquery.wipetouch.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-grid.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-reboot.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui/jquery-ui.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'jquery-3.4.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
     <SCRIPT src="https://www.scc.kit.edu/6.js" language="javascript" type="text/javascript"></SCRIPT>
     <script type="text/javascript" src="https://www.scc.kit.edu/4218.js"></script>
     <base target="_top" />
@@ -41,9 +43,6 @@
     <meta name="pageguid" content="B31BA3E8D403428A9010B1578410FF72" />
     <meta name="is_public" content="true" />
     <title>KIT - SCC - Dienste - Datenhaltung und -management - LSDF</title>
-    <script type="text/javascript">
-        {% block add-js %}{% endblock %}
-    </script>
 </head>
 
 <body>
@@ -95,7 +94,7 @@
         if (typeof(disable_faq) != 'boolean') {
             collapseFAQ();
         }
-        height = $("#wrapper").outerHeight() - $("#head").outerHeight() - 8 - $(".spacer").outerHeight();
+        height = $("#wrapper").outerHeight() - $("#head").outerHeight() - 8 - $(".spacer").outerHeight() + 15;
         $("#wrapper-content").css("height", height);
     </script>
 {% endblock %}

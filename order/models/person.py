@@ -1,14 +1,10 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
 
-class Person(models.Model):
-    username = models.CharField(max_length=50, null=True, blank=True)
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
+class Person(AbstractUser):
     institute = models.CharField(max_length=100, null=True, blank=True)
-    email = models.EmailField(max_length=50)
-    admin = models.BooleanField(null=True)
 
     orders = models.ManyToManyField(
         'order.Order',
@@ -18,4 +14,4 @@ class Person(models.Model):
     )
 
     def __str__(self):
-        return self.firstname
+        return self.first_name

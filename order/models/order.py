@@ -32,8 +32,8 @@ class Order(models.Model):
     protocol_sftp = models.BooleanField(verbose_name='SFTP', default=True)
     protocol_scp = models.BooleanField(verbose_name='SCP', default=True)
     protocol_cifs = models.BooleanField(verbose_name='CIFS')
-    protocol_nfs = models.BooleanField(verbose_name='NFS')
-    nfs_network = models.CharField(max_length=50, null=True, blank=True, verbose_name='NFS V3 (Client needs to be connected to KIT-IDM)')
+    protocol_nfs = models.BooleanField(verbose_name='NFS V3 (Client needs to be connected to KIT-IDM)')
+    nfs_network = models.CharField(max_length=50, null=True, blank=True, verbose_name='NFS Client networks*')
     owner_name = models.CharField(max_length=50)
     group_name = models.CharField(max_length=50)
     group_permission = models.CharField(
