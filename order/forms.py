@@ -42,16 +42,6 @@ class OrderSimpleForm(ModelForm):
 #        fields = ['project_name', 'abstract', 'notes', 'end_date', 'capacity', 'directory_name', 'protocol_ssh', 'protocol_sftp', 'protocol_cifs', 'protocol_nfs', 'nfs_network',
 #                  'owner_name', 'group_name', 'group_permission', 'group_cifsacls', 'headPersonEmail', 'headPersonFirstname', 'headPersonLastname']
         exclude = ['state', 'create_date', 'modify_date', 'persons']
-        help_texts = {
-            'abstract': 'Please describe the scientific objectives of your project',
-            'notes': 'Please describe your technical requirements',
-            'end_date': 'End of the project',
-            'capacity': 'Expected storage capacity in TB (1 TB = 1000 GB)',
-            'directory_name': 'What should be the name of the project directory? We recommend using a short project acronmy. Allowed characters are "a-z 0-9 _ -"',
-            'nfs_network': 'Has to be one or many IPs or Subnets (for example 141.52.000.0/24)',
-            'owner_name': 'Who should be the owner the project directory? The owner can be a KIT user (e.g. ab1234) or a KIT service account (e.g. OE-ProjectName-0001). Please, contact your ITB to create a service account.',
-            'group_name': 'Which group should get access to your project directory (e.g. OE-ProjectName-LSDF)? Please, leave this field empty if you don\'t want to share your data or contact your ITB to create a group',
-        }
 
     def __init__(self, owner=None, *args, **kwargs):
         if kwargs.get('instance'):
@@ -132,6 +122,12 @@ class OrderSimpleForm(ModelForm):
                 PersonOrder.objects.filter(order=order, role=role).delete()
             finally:
                 PersonOrder.objects.create(person=person, order=order, role=role)
+
+
+class OrderAdminForm(OrderSimpleForm):
+    class Meta:
+        model = Order
+        exclude = ['create_date', 'modify_date', 'persons']
 
 
 class OrderEditForm(OrderSimpleForm):

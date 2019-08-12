@@ -14,6 +14,10 @@
         <p class="bigger text-danger"><strong>{{ error_message }}</strong></p>
     {% endif %}
 
+    {% if next_state %}
+        <a href="{% url 'order:order-next-state' pk %}" class="btn btn-warning float-right" onclick="window.location = {% url 'order:order-next-state' pk %}">{{ next_state }}</a>
+    {% endif %}
+
     <form action="{% if pk %}{% url 'order:edit' pk %}{% else %}{% url 'order:new' %}{% endif %}"
           accept-charset="UTF-8"
           method="post"
@@ -76,11 +80,18 @@
         {{ form.group_permission|as_crispy_field }}
         {{ form.group_cifsacls|as_crispy_field }}
 
+        {% if form.state %}
+            <h2>State</h2>
+            {{ form.state|as_crispy_field }}
+        {% endif %}
+
         {% if pk %}
             <button type="submit" class="btn btn-success">Save changes</button>
         {% else %}
             <button type="submit" class="btn btn-success">Submit Storage Proposal</button>
         {% endif %}
+
+        <a href="{% url 'order:index' %}" class="btn btn-danger float-right">Home</a>
 
     </form>
 

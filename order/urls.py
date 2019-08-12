@@ -24,4 +24,5 @@ urlpatterns = [
     path('new/', views.edit, name='new'),
     path('persons/', views.PersonsView.as_view(), name='persons'),
     path('persons/<int:pk>', views.personadmin, name='persons-admin'),
+    path('order/state/<int:pk>', views.order_next_state, name='order-next-state'),
 ]

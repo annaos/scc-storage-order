@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms import formset_factory
+from django.utils.translation import gettext_lazy as _
 import logging
 logger = logging.getLogger(__name__)
 
@@ -17,12 +18,6 @@ class IndexView(generic.ListView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        if 'shib' in request.session:
-            shib_meta = request.session['shib']
-            logger.warning('Session: ')
-            logger.warning(shib_meta)
-        logger.warning('User: ')
-        logger.warning(request.user)
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -61,8 +56,8 @@ def edit(request, pk=None):
     if pk:
         order = get_object_or_404(Order, pk=pk)
         if request.user.is_staff:
-            form_class = OrderSimpleForm
-        elif order.hasPerson(request.user):
+            form_class = OrderAdminForm
+        elif order.has_person(request.user):
             form_class = OrderEditForm
         else:
             return HttpResponseForbidden()
@@ -78,7 +73,7 @@ def edit(request, pk=None):
             # TODO success flash message
             return HttpResponseRedirect(reverse('order:edit', args=(order.id,)))
         else:
-            context['error_message'] = "Form invalid"
+            context['error_message'] = "Form is invalid. Please check it."
     else:
         form = form_class(instance=order, owner=request.user)
 
@@ -86,8 +81,27 @@ def edit(request, pk=None):
     if order.protocol_nfs:
         context['nfs_aria_expanded'] = "true"
 
+    context['next_state'] = None
+    if pk and request.user.is_staff and order.next_state():
+        context['next_state'] = order.next_state()
+
     context['form'] = form
     return render(request, 'edit.html', context)
+
+
+@login_required
+def order_next_state(request, pk):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+    order = get_object_or_404(Order, pk=pk)
+    if order.next_state():
+        order.state = order.next_state()
+        order.save()
+        # TODO add success flash message
+    else:
+        # TODO add error flash message
+        a = 1
+    return HttpResponseRedirect(reverse('order:edit', args=(pk,)))
 
 
 def comment(request, pk):

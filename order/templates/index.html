@@ -16,7 +16,7 @@
             <tbody>
             {% for order in latest_order_list %}
                 <tr {% if order.is_approved %}class="bg-success"{% endif %}{% if order.is_pending %}class="bg-warning"{% endif %} >
-                    <td style="padding-right: 50px;">
+                    <td style="padding-right: 50px; vertical-align: middle;">
                         <a href="{% url 'order:edit' order.id %}">{{ order }}</a>
                     </td>
                     <td style="padding-right: 50px; margin: 0">
@@ -25,11 +25,11 @@
                     <td style="padding-right: 50px; margin: 0">
                         <p style="margin: 5px 0;">{{ order.head.institute }}</p>
                     </td>
-                    <td style="padding-right: 50px; margin: 0">
+                    <td style="padding-right: 50px; margin: 0;">
                         <p style="margin: 5px 0;">{{ order.capacity }}</p>
                     </td>
-                    <td>
-                        <a href="{% url 'order:comment' order.id %}">Add comment</a>
+                    <td style="vertical-align: middle;">
+                        <a href="{% url 'order:comment' order.id %}" class="btn btn-secondary">Add comment</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -39,9 +39,9 @@
         <p>No requests are available.</p>
     {% endif %}
 
-    <a href="{% url 'order:new' %}" class="kit-ca-ui-button bigger box-left-to-right">New request</a>
-    {# TODO user.is_superuser? #}
-    {% if user.is_superuser %}
-        <a href="{% url 'order:persons' %}" class="kit-ca-ui-button bigger box-left-to-right">List of users</a>
+    <a href="{% url 'order:new' %}" class="btn btn-primary float-right">New request</a>
+
+    {% if user.is_staff %}
+        <a href="{% url 'order:persons' %}" class="btn btn-primary float-right mr-4">List of users</a>
     {% endif %}
 {% endblock %}
