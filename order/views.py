@@ -3,7 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from .models.order import Order
 from .forms import *
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -27,12 +27,10 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         new_context = Order.objects.order_by('-create_date')
-        # TODO filter by user if not admin / check if it works
-        if self.request.user.is_authenticated:# and not self.request.user.is_superuser:
+        if not self.request.user.is_staff:
             new_context = new_context.filter(
-           #TODO     Q(person=self.request.user)
-           #TODO     Q(owner=self.request.user) | Q(head=self.request.user) | Q(tech=self.request.user)
-            )
+                persons__email=self.request.user.email
+            ).distinct()
         return new_context
 
 
@@ -50,9 +48,9 @@ class PersonsView(generic.ListView):
 
 @login_required
 def personadmin(request, pk):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
     person = get_object_or_404(Person, pk=pk)
-    # TODO check if user has right to edit. if not:
-    # return HttpResponseForbidden() + flashMessage
     person.is_staff = not person.is_staff
     person.save()
     return HttpResponseRedirect(reverse('order:persons'))
@@ -62,18 +60,19 @@ def personadmin(request, pk):
 def edit(request, pk=None):
     if pk:
         order = get_object_or_404(Order, pk=pk)
-        # TODO check if user is an admin, then
-        # form_class = OrderSimpleForm
-        form_class = OrderEditForm
-        # TODO check if user has right to edit. if not:
-        # return HttpResponseForbidden()
+        if request.user.is_staff:
+            form_class = OrderSimpleForm
+        elif order.hasPerson(request.user):
+            form_class = OrderEditForm
+        else:
+            return HttpResponseForbidden()
     else:
         order = Order()
         form_class = OrderSimpleForm
 
     context = {'pk': pk}
     if request.method == "POST":
-        form = form_class(request.POST, instance=order)
+        form = form_class(data=request.POST, instance=order, owner=request.user)
         if form.is_valid():
             order = form.save()
             # TODO success flash message
@@ -81,7 +80,7 @@ def edit(request, pk=None):
         else:
             context['error_message'] = "Form invalid"
     else:
-        form = form_class(instance=order)
+        form = form_class(instance=order, owner=request.user)
 
     context['nfs_aria_expanded'] = "false"
     if order.protocol_nfs:

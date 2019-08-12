@@ -11,7 +11,7 @@
     </h1>
 
     {% if error_message %}
-        <p class="bigger"><strong>{{ error_message }}</strong></p>
+        <p class="bigger text-danger"><strong>{{ error_message }}</strong></p>
     {% endif %}
 
     <form action="{% if pk %}{% url 'order:edit' pk %}{% else %}{% url 'order:new' %}{% endif %}"
@@ -25,14 +25,21 @@
 
         <h2>Contacts</h2>
         <div class="row justify-content-center">
-            <div class="col-6">
+            <div class="col-4">
+                <h5>Owner of the project</h5>
+                {{ form.owner_email|as_crispy_field }}
+                {{ form.owner_institute|as_crispy_field }}
+                {{ form.owner_firstname|as_crispy_field }}
+                {{ form.owner_lastname|as_crispy_field }}
+            </div>
+            <div class="col-4">
                 <h5>Head of the project</h5>
                 {{ form.head_email|as_crispy_field }}
                 {{ form.head_institute|as_crispy_field }}
                 {{ form.head_firstname|as_crispy_field }}
                 {{ form.head_lastname|as_crispy_field }}
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <h5>Technical contact</h5>
                 {{ form.tech_email|as_crispy_field }}
                 {{ form.tech_institute|as_crispy_field }}
@@ -80,7 +87,7 @@
     <script type="text/javascript">
         $(function () {
             // display end_date with calender
-            $("#id_end_date").datepicker({ dateFormat: 'dd.mm.yyyy' });
+            $("#id_end_date").datepicker({ dateFormat: 'dd.mm.yy' });
 
             // collapse nfs_network field if checkbox not checked
             $("#div_id_nfs_network_to_collapse").addClass("collapse");

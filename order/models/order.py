@@ -92,3 +92,11 @@ class Order(models.Model):
         if person_order is None:
             return None
         return person_order.person
+
+    def hasPerson(self, person):
+        from .personorder import PersonOrder
+        person_order = PersonOrder.objects.filter(order=self).filter(person=person).first()
+        if person_order is None:
+            return False
+        return True
+
