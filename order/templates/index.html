@@ -3,7 +3,7 @@
 {% block content-wrapper %}
     {% if latest_order_list %}
         <h3>Storage projects:</h3>
-        <table class="table table-striped">
+        <table class="table">
         <thead>
         <tr>
            <th scope="col">Project name</th>
@@ -15,9 +15,9 @@
         </thead>
             <tbody>
             {% for order in latest_order_list %}
-                <tr {% if order.is_approved %}class="bg-success"{% endif %}{% if order.is_pending %}class="bg-warning"{% endif %} >
+                <tr {% if order.is_approved %}class="alert alert-success"{% endif %}{% if order.is_pending %}class="alert alert-warning"{% endif %}{% if order.is_new %}class="alert alert-light"{% endif %} >
                     <td style="padding-right: 50px; vertical-align: middle;">
-                        <a href="{% url 'order:edit' order.id %}">{{ order }}</a>
+                        <a href="{% url 'order:edit' order.id %}" class="alert-link">{{ order }}</a>
                     </td>
                     <td style="padding-right: 50px; margin: 0">
                         <p style="margin: 5px 0;">{{ order.head.first_name }} {{ order.head.last_name }}</p>
@@ -29,7 +29,8 @@
                         <p style="margin: 5px 0;">{{ order.capacity }}</p>
                     </td>
                     <td style="vertical-align: middle;">
-                        <a href="{% url 'order:comment' order.id %}" class="btn btn-secondary">Add comment</a>
+                        <a href="{% url 'order:comment' order.id %}" class="btn btn-secondary mr-3">Add comment</a>
+                        <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -39,9 +40,9 @@
         <p>No requests are available.</p>
     {% endif %}
 
-    <a href="{% url 'order:new' %}" class="btn btn-primary float-right">New request</a>
+    <a href="{% url 'order:new' %}" class="btn btn-info float-right">New request</a>
 
     {% if user.is_staff %}
-        <a href="{% url 'order:persons' %}" class="btn btn-primary float-right mr-4">List of users</a>
+        <a href="{% url 'order:persons' %}" class="btn btn-info float-right mr-4">List of users</a>
     {% endif %}
 {% endblock %}
