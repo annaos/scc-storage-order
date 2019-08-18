@@ -19,6 +19,7 @@
     {% endif %}
 
     <form action="{% if pk %}{% url 'order:edit' pk %}{% else %}{% url 'order:new' %}{% endif %}"
+          class="mb-5"
           accept-charset="UTF-8"
           method="post"
     >
@@ -97,7 +98,7 @@
             </a>
         {% endif %}
 
-        <a href="{% url 'order:index' %}" class="btn btn-info float-right mb-5">Home</a>
+        <a href="{% url 'order:index' %}" class="btn btn-info float-right">Home</a>
 
     </form>
 
