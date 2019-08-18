@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import generic
 from .models.order import Order
+from .models.comment import Comment
 from .forms import *
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse
@@ -53,6 +54,7 @@ def personadmin(request, pk):
 
 @login_required
 def edit(request, pk=None):
+    context = {'pk': pk}
     if pk:
         order = get_object_or_404(Order, pk=pk)
         if request.user.is_staff:
@@ -61,11 +63,12 @@ def edit(request, pk=None):
             form_class = OrderEditForm
         else:
             return HttpResponseForbidden()
+        context['comments'] = Comment.objects.filter(order=order)
+        context['comment_form'] = CommentForm(instance=Comment())
     else:
         order = Order()
         form_class = OrderSimpleForm
 
-    context = {'pk': pk}
     if request.method == "POST":
         form = form_class(data=request.POST, instance=order, owner=request.user)
         if form.is_valid():
@@ -90,6 +93,19 @@ def edit(request, pk=None):
 
 
 @login_required
+def save_comment(request, pk=None):
+    if request.method == "POST":
+        comment = Comment()
+        comment.person = request.user
+        comment.order = get_object_or_404(Order, pk=pk)
+        form = CommentForm(data=request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save()
+            # TODO success flash message
+    return HttpResponseRedirect(reverse('order:edit', args=(pk,)))
+
+
+@login_required
 def order_next_state(request, pk):
     if not request.user.is_staff:
         return HttpResponseForbidden()
@@ -102,8 +118,3 @@ def order_next_state(request, pk):
         # TODO add error flash message
         a = 1
     return HttpResponseRedirect(reverse('order:edit', args=(pk,)))
-
-
-def comment(request, pk):
-    order = get_object_or_404(Order, pk=pk)
-    return render(request, 'detail.html', {'order': order})

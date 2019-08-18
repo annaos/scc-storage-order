@@ -26,7 +26,7 @@ html>/**/body {
 }
 /* Wrapper */
 div#wrapper {
-    background:url(https://www.scc.kit.edu/img/intern/bg_wrapper_V2.png) 0 0 repeat-y;
+    background:url(bg_wrapper_V2.png) 0 0 repeat-y;
     width: 1015px;
     height:auto !important;
     height:100%;

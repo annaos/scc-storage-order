@@ -62,6 +62,10 @@ class Order(models.Model):
         super().__init__(*args, **kwargs)
         self.create_date = timezone.now()
 
+    def save(self, *args, **kwargs):
+        self.modify_date = timezone.now()
+        super().save(self, *args, **kwargs)
+
     def __str__(self):
         return self.project_name
 

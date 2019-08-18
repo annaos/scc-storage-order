@@ -15,7 +15,7 @@
     {% endif %}
 
     {% if next_state %}
-        <a href="{% url 'order:order-next-state' pk %}" class="btn btn-warning float-right" onclick="window.location = {% url 'order:order-next-state' pk %}">{{ next_state }}</a>
+        <a href="{% url 'order:order-next-state' pk %}" class="btn btn-warning float-right">{{ next_state }}</a>
     {% endif %}
 
     <form action="{% if pk %}{% url 'order:edit' pk %}{% else %}{% url 'order:new' %}{% endif %}"
@@ -91,12 +91,58 @@
             <button type="submit" class="btn btn-success">Submit Storage Proposal</button>
         {% endif %}
 
-        <a href="{% url 'order:index' %}" class="btn btn-info float-right">Home</a>
+        {% if pk %}
+            <a role="button" id="btn_add_comment" href="#div_add_comment" class="btn btn-primary btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
+                Add comment
+            </a>
+        {% endif %}
+
+        <a href="{% url 'order:index' %}" class="btn btn-info float-right mb-5">Home</a>
 
     </form>
 
+    {% if comments %}
+        <div class="container">
+            {% for comment in comments %}
+                <div class="row mb-3{% if comment.person.is_staff %} justify-content-end {% endif %}">
+                    <div>
+                        <div class="{% if comment.person.is_staff %}text-right{% endif %}">
+                            {{ comment.person }} commented at {{ comment.create_date|date:"j.n.Y" }}
+                        </div>
+                        <div class="card card-body {% if comment.person.is_staff %}ml-5{% else %}mr-5{% endif %}">
+                            {{ comment.text }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a role="button" href="#div_add_comment" class="btn btn-primary mb-5 btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
+            Add comment
+        </a>
+    {% endif %}
+
+    {% if pk %}
+        <div name="add-comment" id="div_add_comment" class="collapse mt-3 mb-5">
+            <form action="{% url 'order:save-comment' pk %}"
+                  accept-charset="UTF-8"
+                  method="post"
+            >
+                {% csrf_token %}
+                {{ comment_form|crispy }}
+                <button type="submit" class="btn btn-primary">Save comment</button>
+            </form>
+        </div>
+    {% endif %}
+
+
     <script type="text/javascript">
         $(function () {
+            function scrollToAddComment() {
+                let target = $("#div_add_comment");
+                if (target.length) {
+                    $('html,body').animate({ scrollTop: target.offset().top }, 500);
+                }
+            }
             // display end_date with calender
             $("#id_end_date").datepicker({ dateFormat: 'dd.mm.yy' });
 
@@ -107,8 +153,19 @@
             {% endif %}
             let nfsCheckbox = $("#id_protocol_nfs")
             if (!nfsCheckbox.attr("disabled")) {
-                $("#id_protocol_nfs").parent().attr({"data-toggle":"collapse", "data-target":"#div_id_nfs_network_to_collapse", "aria-expanded":"{{ nfs_aria_expanded }}", "aria_controls":"div_id_nfs_network_to_collapse"});
+                $("#id_protocol_nfs").parent().attr({"data-toggle":"collapse", "data-target":"#div_id_nfs_network_to_collapse", "aria-expanded":"{{ nfs_aria_expanded }}", "aria-controls":"div_id_nfs_network_to_collapse"});
             }
+            if (window.location.hash == '#add-comment') {
+                $('#btn_add_comment').trigger('click');
+            }
+
+            $('#div_add_comment').on('show.bs.collapse', function () {
+                $('.btn_add_comment').hide();
+            });
+            $('#div_add_comment').on('shown.bs.collapse', function () {
+                $('.btn_add_comment').hide();
+                scrollToAddComment();
+            });
         });
     </script>
 {% endblock %}

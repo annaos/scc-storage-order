@@ -29,7 +29,7 @@
                         <p style="margin: 5px 0;">{{ order.capacity }}</p>
                     </td>
                     <td style="vertical-align: middle;">
-                        <a href="{% url 'order:comment' order.id %}" class="btn btn-secondary mr-3">Add comment</a>
+                        <a href="{% url 'order:edit' order.id %}#add-comment" class="btn btn-secondary mr-3">Add comment</a>
                         <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
                     </td>
                 </tr>
@@ -40,7 +40,7 @@
         <p>No requests are available.</p>
     {% endif %}
 
-    <a href="{% url 'order:new' %}" class="btn btn-info float-right">New request</a>
+    <a href="{% url 'order:new' %}" class="btn btn-info float-right mb-5">New request</a>
 
     {% if user.is_staff %}
         <a href="{% url 'order:persons' %}" class="btn btn-info float-right mr-4">List of users</a>

@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models.order import Order
+from .models.comment import Comment
 from .models.personorder import PersonOrder
 from .models.person import Person
 from crispy_forms.helper import FormHelper
@@ -14,6 +15,12 @@ class PersonForm(forms.Form):
     email = forms.EmailField(max_length=100)
     firstname = forms.CharField(max_length=100, required=False)
     lastname = forms.CharField(max_length=100, required=False)
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
 
 
 class OrderSimpleForm(ModelForm):

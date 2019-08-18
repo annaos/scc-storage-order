@@ -30,7 +30,7 @@
     <script type="text/javascript" src="{% static 'jquery-3.4.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'bootstrap/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
 
     <SCRIPT src="https://www.scc.kit.edu/6.js" language="javascript" type="text/javascript"></SCRIPT>
     <base target="_top" />
@@ -91,8 +91,6 @@
         if (typeof(disable_faq) != 'boolean') {
             collapseFAQ();
         }
-        height = $("#wrapper").outerHeight() - $("#head").outerHeight() - 8 - $(".spacer").outerHeight() + 15;
-        $("#wrapper-content").css("height", height);
     </script>
 {% endblock %}
 </body>
