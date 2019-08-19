@@ -8,7 +8,9 @@ from crispy_forms.layout import Submit
 from django.db import models
 from django import forms
 import re
-
+from django.utils.translation import gettext_lazy as _
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 # deprecate
 class PersonForm(forms.Form):
@@ -41,7 +43,9 @@ class OrderSimpleForm(ModelForm):
 
     end_date = forms.DateField(
         widget=forms.DateInput(format='%d.%m.%Y'),
-        input_formats=['%d.%m.%Y']
+        input_formats=['%d.%m.%Y'],
+        label=_('End of the project'),
+        help_text=_('The latest possible date is in 3 years')
     )
 
     class Meta:
@@ -73,6 +77,7 @@ class OrderSimpleForm(ModelForm):
                 initial['tech_institute'] = tech_person.institute
                 initial['tech_firstname'] = tech_person.first_name
                 initial['tech_lastname'] = tech_person.last_name
+            initial['end_date'] = date.today() + relativedelta(years=+3)
         ModelForm.__init__(self, *args, **kwargs)
         self.fields['owner_email'].disabled = True
         self.fields['owner_institute'].disabled = True
@@ -94,6 +99,9 @@ class OrderSimpleForm(ModelForm):
             error = forms.ValidationError("Must fill NFS Client networks when choosing NFS V3.")
             self.add_error('nfs_network', error)
             raise error
+
+        if cleaned_data.get("end_date") > date.today() + relativedelta(years=+3):
+            self.add_error('end_date', "End date should be less than 3 years in the future")
 
         if not re.match("^[^\s]+$", cleaned_data.get("group_name")):
             self.add_error('group_name', "Group name should not have spaces")
@@ -146,8 +154,6 @@ class OrderEditForm(OrderSimpleForm):
         self.fields['end_date'].disabled = True
         self.fields['capacity'].disabled = True
         self.fields['directory_name'].disabled = True
-        self.fields['protocol_ssh'].disabled = True
-        self.fields['protocol_sftp'].disabled = True
         self.fields['protocol_cifs'].disabled = True
         self.fields['protocol_nfs'].disabled = True
         self.fields['nfs_network'].disabled = True

@@ -14,9 +14,13 @@
         <p class="bigger text-danger"><strong>{{ error_message }}</strong></p>
     {% endif %}
 
-    {% if next_state %}
-        <a href="{% url 'order:order-next-state' pk %}" class="btn btn-warning float-right">{{ next_state }}</a>
+    {% if order %}
+        <div class="alert alert-{{ order.alert_color }} float-right">{{ order.state }}</div>
     {% endif %}
+
+    <a role="button" href="#div_add_comment" class="btn btn-primary mb-5 mr-2 float-right btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
+        Add comment
+    </a>
 
     <form action="{% if pk %}{% url 'order:edit' pk %}{% else %}{% url 'order:new' %}{% endif %}"
           class="mb-5"
@@ -30,21 +34,23 @@
 
         <h2>Contacts</h2>
         <div class="row justify-content-center">
-            <div class="col-4">
-                <h5>Owner of the project</h5>
-                {{ form.owner_email|as_crispy_field }}
-                {{ form.owner_institute|as_crispy_field }}
-                {{ form.owner_firstname|as_crispy_field }}
-                {{ form.owner_lastname|as_crispy_field }}
-            </div>
-            <div class="col-4">
+            {% if pk %}
+                <div class="col-4">
+                    <h5>Owner of the project</h5>
+                    {{ form.owner_email|as_crispy_field }}
+                    {{ form.owner_institute|as_crispy_field }}
+                    {{ form.owner_firstname|as_crispy_field }}
+                    {{ form.owner_lastname|as_crispy_field }}
+                </div>
+            {% endif %}
+            <div class="col-{% if pk %}4{% else %}6{% endif %}">
                 <h5>Head of the project</h5>
                 {{ form.head_email|as_crispy_field }}
                 {{ form.head_institute|as_crispy_field }}
                 {{ form.head_firstname|as_crispy_field }}
                 {{ form.head_lastname|as_crispy_field }}
             </div>
-            <div class="col-4">
+            <div class="col-{% if pk %}4{% else %}6{% endif %}">
                 <h5>Technical contact</h5>
                 {{ form.tech_email|as_crispy_field }}
                 {{ form.tech_institute|as_crispy_field }}
@@ -61,9 +67,9 @@
         {{ form.directory_name|as_crispy_field }}
 
         <h2>Protocols</h2>
-        {{ form.protocol_ssh|as_crispy_field }}
-        {{ form.protocol_sftp|as_crispy_field }}
-        {{ form.protocol_scp|as_crispy_field }}
+        <div class="mb-2">
+            Protocols SSH, SFTP, SCP, HTTPS/Web are for all requests.
+        </div>
         {{ form.protocol_cifs|as_crispy_field }}
         {{ form.protocol_nfs|as_crispy_field }}
         <div id="div_id_nfs_network_to_collapse">{{ form.nfs_network|as_crispy_field }}</div>
@@ -86,20 +92,21 @@
             {{ form.state|as_crispy_field }}
         {% endif %}
 
-        {% if pk %}
-            <button type="submit" class="btn btn-success">Save changes</button>
-        {% else %}
-            <button type="submit" class="btn btn-success">Submit Storage Proposal</button>
-        {% endif %}
+        <div class="container">
+            <div class="row justify-content-end mb-5">
+                {% if pk %}
+                    <a role="button" id="btn_add_comment" href="#div_add_comment" class="btn btn-primary mr-2 btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
+                        Add comment
+                    </a>
+                {% endif %}
 
-        {% if pk %}
-            <a role="button" id="btn_add_comment" href="#div_add_comment" class="btn btn-primary btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
-                Add comment
-            </a>
-        {% endif %}
-
-        <a href="{% url 'order:index' %}" class="btn btn-info float-right">Home</a>
-
+                {% if pk %}
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                {% else %}
+                    <button type="submit" class="btn btn-success">Submit Storage Proposal</button>
+                {% endif %}
+            </div>
+        </div>
     </form>
 
     {% if comments %}
@@ -108,16 +115,16 @@
                 <div class="row mb-3{% if comment.person.is_staff %} justify-content-end {% endif %}">
                     <div>
                         <div class="{% if comment.person.is_staff %}text-right{% endif %}">
-                            {{ comment.person }} commented at {{ comment.create_date|date:"j.n.Y" }}
+                            <span class="font-weight-bold">{{ comment.person }}</span> commented at {{ comment.create_date|date:"j.n.Y" }}
                         </div>
-                        <div class="card card-body {% if comment.person.is_staff %}ml-5{% else %}mr-5{% endif %}">
+                        <div class="card card-body {% if comment.person.is_staff %}text-right ml-5 alert alert-dark{% else %}mr-5{% endif %}">
                             {{ comment.text }}
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        <a role="button" href="#div_add_comment" class="btn btn-primary mb-5 btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
+        <a role="button" href="#div_add_comment" class="btn btn-primary mb-5 float-right btn_add_comment" data-toggle="collapse" aria-expanded="false" aria-controls="div_add_comment">
             Add comment
         </a>
     {% endif %}
@@ -130,7 +137,7 @@
             >
                 {% csrf_token %}
                 {{ comment_form|crispy }}
-                <button type="submit" class="btn btn-primary">Save comment</button>
+                <button type="submit" class="btn btn-primary float-right mb-5">Save comment</button>
             </form>
         </div>
     {% endif %}
@@ -138,14 +145,15 @@
 
     <script type="text/javascript">
         $(function () {
-            function scrollToAddComment() {
-                let target = $("#div_add_comment");
-                if (target.length) {
-                    $('html,body').animate({ scrollTop: target.offset().top }, 500);
-                }
-            }
             // display end_date with calender
-            $("#id_end_date").datepicker({ dateFormat: 'dd.mm.yy' });
+            $("#id_end_date").datepicker({  dateFormat: 'dd.mm.yy' ,
+                                            changeMonth: true,
+                                            changeYear: true,
+                                            showOtherMonths: true,
+                                            selectOtherMonths: true,
+                                            maxDate: "+3Y",
+                                            defaultDate: "+3Y"
+                                        });
 
             // collapse nfs_network field if checkbox not checked
             $("#div_id_nfs_network_to_collapse").addClass("collapse");
@@ -156,15 +164,18 @@
             if (!nfsCheckbox.attr("disabled")) {
                 $("#id_protocol_nfs").parent().attr({"data-toggle":"collapse", "data-target":"#div_id_nfs_network_to_collapse", "aria-expanded":"{{ nfs_aria_expanded }}", "aria-controls":"div_id_nfs_network_to_collapse"});
             }
-            if (window.location.hash == '#add-comment') {
-                $('#btn_add_comment').trigger('click');
-            }
 
+            // append add comment field
+            function scrollToAddComment() {
+                let target = $("#div_add_comment");
+                if (target.length) {
+                    $('html,body').animate({ scrollTop: target.offset().top }, 500);
+                }
+            }
             $('#div_add_comment').on('show.bs.collapse', function () {
                 $('.btn_add_comment').hide();
             });
             $('#div_add_comment').on('shown.bs.collapse', function () {
-                $('.btn_add_comment').hide();
                 scrollToAddComment();
             });
         });

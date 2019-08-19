@@ -6,17 +6,18 @@
         <table class="table">
         <thead>
         <tr>
-           <th scope="col">Project name</th>
-           <th scope="col">Head of project</th>
+           <th scope="col">Project Name</th>
+           <th scope="col">Head of Project</th>
            <th scope="col">Institute</th>
            <th scope="col">Capacity</th>
+           <th scope="col">Last changes</th>
            <th scope="col">Action</th>
         </tr>
         </thead>
             <tbody>
             {% for order in latest_order_list %}
-                <tr {% if order.is_approved %}class="alert alert-success"{% endif %}{% if order.is_pending %}class="alert alert-warning"{% endif %}{% if order.is_new %}class="alert alert-light"{% endif %} >
-                    <td style="padding-right: 50px; vertical-align: middle;">
+                <tr class="alert alert-{{ order.alert_color }}" >
+                    <td style="padding-right: 50px;">
                         <a href="{% url 'order:edit' order.id %}" class="alert-link">{{ order }}</a>
                     </td>
                     <td style="padding-right: 50px; margin: 0">
@@ -26,10 +27,12 @@
                         <p style="margin: 5px 0;">{{ order.head.institute }}</p>
                     </td>
                     <td style="padding-right: 50px; margin: 0;">
-                        <p style="margin: 5px 0;">{{ order.capacity }}</p>
+                        <p style="margin: 5px 0;">{{ order.capacity }} TB</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0;">
+                        <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y" }}</p>
                     </td>
                     <td style="vertical-align: middle;">
-                        <a href="{% url 'order:edit' order.id %}#add-comment" class="btn btn-secondary mr-3">Add comment</a>
                         <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
                     </td>
                 </tr>

@@ -22,7 +22,7 @@ class IndexView(generic.ListView):
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        new_context = Order.objects.order_by('-create_date')
+        new_context = Order.objects.order_by('-modify_date')
         if not self.request.user.is_staff:
             new_context = new_context.filter(
                 persons__email=self.request.user.email
@@ -84,9 +84,9 @@ def edit(request, pk=None):
     if order.protocol_nfs:
         context['nfs_aria_expanded'] = "true"
 
-    context['next_state'] = None
-    if pk and request.user.is_staff and order.next_state():
-        context['next_state'] = order.next_state()
+    context['order'] = None
+    if pk:
+        context['order'] = order
 
     context['form'] = form
     return render(request, 'edit.html', context)
@@ -101,6 +101,7 @@ def save_comment(request, pk=None):
         form = CommentForm(data=request.POST, instance=comment)
         if form.is_valid():
             comment = form.save()
+            comment.order.save()
             # TODO success flash message
     return HttpResponseRedirect(reverse('order:edit', args=(pk,)))
 
