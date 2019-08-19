@@ -5,9 +5,10 @@
         <table class="table table-striped">
         <thead>
         <tr>
-           <td scope="col">Username / Email</td>
+           <td scope="col">Username</td>
            <td scope="col">Name</td>
            <td scope="col">Institute</td>
+           <td scope="col">Email</td>
            <td scope="col">Aktion</td>
         </tr>
         </thead>
@@ -22,6 +23,9 @@
                     </td>
                     <td style="padding-right: 50px; margin: 0">
                         <p style="margin: 5px 0;">{{ person.institute }}</p>
+                    </td>
+                    <td style="padding-right: 50px; margin: 0">
+                        <p style="margin: 5px 0;">{{ person.email }}</p>
                     </td>
                     <td style="padding-right: 50px; margin: 0">
                         <a href="{% url 'order:persons-admin' person.id %}">

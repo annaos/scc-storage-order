@@ -80,7 +80,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SHIBBOLETH_ATTRIBUTE_MAP = {
-    "mail": (True, "username"),
+    "eppn": (True, "username"),
     "givenName": (True, "first_name"),
     "sn": (True, "last_name"),
     "mail": (True, "email"),
