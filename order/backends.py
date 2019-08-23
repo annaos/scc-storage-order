@@ -34,7 +34,7 @@ class LsdfUserBackend(ShibbolethRemoteUserBackend):
                     user = User.objects.get(username=email)
                     user.username = username
                 except User.DoesNotExist:
-                    user = User(username=username, defaults=shib_user_params)
+                    user = User(shib_user_params)
                     created = True
             if created:
                 """
