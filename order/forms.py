@@ -3,9 +3,6 @@ from .models.order import Order
 from .models.comment import Comment
 from .models.personorder import PersonOrder
 from .models.person import Person
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
-from django.db import models
 from django import forms
 import re
 from django.utils.translation import gettext_lazy as _
@@ -31,7 +28,7 @@ class OrderSimpleForm(ModelForm):
     head_firstname = forms.CharField(max_length=100, required=True, label='Firstname')
     head_lastname = forms.CharField(max_length=100, required=True, label='Lastname')
 
-    tech_email = forms.EmailField(max_length=100, label='Email')
+    tech_email = forms.EmailField(max_length=100, required=False, label='Email')
     tech_institute = forms.CharField(max_length=300, required=False, label='Institute')
     tech_firstname = forms.CharField(max_length=100, required=False, label='Firstname')
     tech_lastname = forms.CharField(max_length=100, required=False, label='Lastname')
@@ -86,9 +83,9 @@ class OrderSimpleForm(ModelForm):
 
     def save(self, commit=True):
         order = super(OrderSimpleForm, self).save()
+        self._create_person_order(order, PersonOrder.ROLE_OWNER, 'owner')
         self._create_person_order(order, PersonOrder.ROLE_HEAD, 'head')
         self._create_person_order(order, PersonOrder.ROLE_TECH, 'tech')
-        self._create_person_order(order, PersonOrder.ROLE_OWNER, 'owner')
         return order
 
     def clean(self):
@@ -114,27 +111,28 @@ class OrderSimpleForm(ModelForm):
 
     def _create_person_order(self, order, role, prefix):
         person_email = self.cleaned_data.get(prefix + '_email')
-        try:
-            person = Person.objects.get(username=person_email)
-        except Person.DoesNotExist:
+        if person_email.strip():
             try:
-                person = Person.objects.get(email=person_email)
+                person = Person.objects.get(username=person_email)
             except Person.DoesNotExist:
-                person = Person()
-                person.email = person_email
-                person.username = person_email
-                person.set_unusable_password()
-        person.first_name = self.cleaned_data.get(prefix + '_firstname')
-        person.institute = self.cleaned_data.get(prefix + '_institute')
-        person.last_name = self.cleaned_data.get(prefix + '_lastname')
-        person.save()
-        try:
-            PersonOrder.objects.get(person=person, order=order, role=role)
-        except PersonOrder.DoesNotExist:
+                try:
+                    person = Person.objects.get(email=person_email)
+                except Person.DoesNotExist:
+                    person = Person()
+                    person.email = person_email
+                    person.username = person_email
+                    person.set_unusable_password()
+            person.first_name = self.cleaned_data.get(prefix + '_firstname')
+            person.institute = self.cleaned_data.get(prefix + '_institute')
+            person.last_name = self.cleaned_data.get(prefix + '_lastname')
+            person.save()
             try:
-                PersonOrder.objects.filter(order=order, role=role).delete()
-            finally:
-                PersonOrder.objects.create(person=person, order=order, role=role)
+                PersonOrder.objects.get(person=person, order=order, role=role)
+            except PersonOrder.DoesNotExist:
+                try:
+                    PersonOrder.objects.filter(order=order, role=role).delete()
+                finally:
+                    PersonOrder.objects.create(person=person, order=order, role=role)
 
 
 class OrderAdminForm(OrderSimpleForm):

@@ -79,6 +79,19 @@ AUTHENTICATION_BACKENDS = (
     config('AUTHENTICATION_BACKENDS', default='django.contrib.auth.backends.ModelBackend'),
 )
 
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default=None)
+EMAIL_PORT = config('EMAIL_PORT', default=None)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=None)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=None)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=None)
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=None)
+EMAIL_SSL_KEYFILE = config('EMAIL_SSL_KEYFILE', default=None)
+EMAIL_SSL_CERTFILE = config('EMAIL_SSL_CERTFILE', default=None)
+EMAIL_ADMIN_ADDRESS = config('EMAIL_ADMIN_ADDRESS', default='admin@example.com')
+EMAIL_SENDER_ADDRESS = config('EMAIL_SENDER_ADDRESS', default=None)
+
 SHIBBOLETH_ATTRIBUTE_MAP = {
     "eppn": (True, "username"),
     "givenName": (True, "first_name"),

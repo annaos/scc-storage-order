@@ -3,7 +3,7 @@
 
 {% block content-wrapper %}
     {% if latest_order_list %}
-        <h3>Storage projects:</h3>
+        <h3 class="mt-2">Storage projects:</h3>
         <table class="table" id="orders">
         <thead>
         <tr>
@@ -12,7 +12,7 @@
            <th scope="col">Institute</th>
            <th scope="col">Capacity</th>
            <th scope="col">Last changes</th>
-           <th scope="col">Action</th>
+           <th scope="col d-none">State</th>
         </tr>
         </thead>
             <tbody>
@@ -31,10 +31,13 @@
                         <p style="margin: 5px 0;">{{ order.capacity }} TB</p>
                     </td>
                     <td style="padding-right: 50px; margin: 0;">
-                        <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y" }}</p>
+                        <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y at H:i" }}</p>
                     </td>
                     <td style="vertical-align: middle;">
                         <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
+                    </td>
+                    <td class="d-none">
+                        {{ order.state }}
                     </td>
                 </tr>
             {% endfor %}
@@ -59,8 +62,12 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#orders').DataTable();
-            $('.dataTables_length').addClass('bs-select');
+            $('#orders').DataTable({
+                "columnDefs": [
+                    {"targets": [5], "searchable": false, "orderable": false, "visible": true},
+                    {"targets": [6], "searchable": true, "orderable": false, "visible": false}
+                ]
+            });
         });
     </script>
 {% endblock %}
