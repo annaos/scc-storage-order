@@ -31,7 +31,7 @@
                         <p style="margin: 5px 0;">{{ order.capacity }} TB</p>
                     </td>
                     <td style="padding-right: 50px; margin: 0;">
-                        <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y at H:i" }}</p>
+                        <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y H:i" }}</p>
                     </td>
                     <td style="vertical-align: middle;">
                         <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
