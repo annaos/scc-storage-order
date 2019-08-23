@@ -29,13 +29,9 @@ class LsdfUserBackend(ShibbolethRemoteUserBackend):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                try:
-                    email = self.clean_username(shib_user_params.get('email'))
-                    user = User.objects.get(username=email)
-                    user.username = username
-                except User.DoesNotExist:
-                    user = User(shib_user_params)
-                    created = True
+                email = self.clean_username(shib_user_params.get('email'))
+                user, created = User.objects.get_or_create(username=email, defaults=shib_user_params)
+                user.username = username
             if created:
                 """
                 @note: setting password for user needs on initial creation of user instead of after auth.login() of middleware.
