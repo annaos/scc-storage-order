@@ -76,11 +76,11 @@ class Order(models.Model):
         return self.state == self.APPROVED
 
     def alert_color(self):
-        if self.is_approved:
+        if self.is_approved():
             return 'success'
-        if self.is_pending:
+        if self.is_pending():
             return 'warning'
-        if self.is_new:
+        if self.is_new():
             return 'dark'
         return 'light'
 

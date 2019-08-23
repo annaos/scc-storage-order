@@ -116,20 +116,18 @@ class OrderSimpleForm(ModelForm):
         person_email = self.cleaned_data.get(prefix + '_email')
         try:
             person = Person.objects.get(username=person_email)
-            # TODO update firstname lastname for existed person? or show fields only per ajax
-            person.first_name = self.cleaned_data.get(prefix + '_firstname')
-            person.institute = self.cleaned_data.get(prefix + '_institute')
-            person.last_name = self.cleaned_data.get(prefix + '_lastname')
-            person.save()
         except Person.DoesNotExist:
-            person = Person()
-            person.email = person_email
-            person.username = person_email
-            person.first_name = self.cleaned_data.get(prefix + '_firstname')
-            person.institute = self.cleaned_data.get(prefix + '_institute')
-            person.last_name = self.cleaned_data.get(prefix + '_lastname')
-            person.set_unusable_password()
-            person.save()
+            try:
+                person = Person.objects.get(email=person_email)
+            except Person.DoesNotExist:
+                person = Person()
+                person.email = person_email
+                person.username = person_email
+                person.set_unusable_password()
+        person.first_name = self.cleaned_data.get(prefix + '_firstname')
+        person.institute = self.cleaned_data.get(prefix + '_institute')
+        person.last_name = self.cleaned_data.get(prefix + '_lastname')
+        person.save()
         try:
             PersonOrder.objects.get(person=person, order=order, role=role)
         except PersonOrder.DoesNotExist:

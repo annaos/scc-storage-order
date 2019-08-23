@@ -37,7 +37,7 @@ python manage.py createsuperuser # create super user for /admin
 
 Under [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) you find admin part for database.
 
-Under [http://127.0.0.1:8000/order](http://127.0.0.1:8000/order) you find management system for storage requests.
+Under [http://127.0.0.1:8000](http://127.0.0.1:8000) you find management system for storage requests.
 
 ## License
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License

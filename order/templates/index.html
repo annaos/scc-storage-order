@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content-wrapper %}
     {% if latest_order_list %}
         <h3>Storage projects:</h3>
-        <table class="table">
+        <table class="table" id="orders">
         <thead>
         <tr>
            <th scope="col">Project Name</th>
@@ -43,9 +44,23 @@
         <p>No requests are available.</p>
     {% endif %}
 
-    <a href="{% url 'order:new' %}" class="btn btn-info float-right mb-5">New request</a>
+    <div class="row mt-3 float-right mb-5">
+        <div class="col-12">
+            {% if user.is_staff %}
+                <a href="{% url 'order:persons' %}" class="btn btn-info mr-4">List of users</a>
+            {% endif %}
+            <a href="{% url 'order:new' %}" class="btn btn-info">New request</a>
+        </div>
+    </div>
 
-    {% if user.is_staff %}
-        <a href="{% url 'order:persons' %}" class="btn btn-info float-right mr-4">List of users</a>
-    {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'DataTables/datatables.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#orders').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
 {% endblock %}
