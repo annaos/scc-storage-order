@@ -16,14 +16,11 @@ Install Shibboleth
 pip install git+https://github.com/Brown-University-Library/django-shibboleth-remoteuser.git
 ```
 
-Install django-crispy-forms:
+Install modules:
 ```bash
 pip install django-crispy-forms
-```
-
-Install python-decouple to organize settings:
-```bash
-pip install python-decouple
+pip install python-dateutil
+pip install python-decouple # to organize settings
 ```
 
 ## Usage

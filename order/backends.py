@@ -20,7 +20,6 @@ class LsdfUserBackend(ShibbolethRemoteUserBackend):
         username = self.clean_username(remote_user)
         field_names = [x.name for x in User._meta.get_fields()]
         shib_user_params = dict([(k, shib_meta[k]) for k in field_names if k in shib_meta])
-        email = self.clean_username(shib_user_params.email)
         # Note that this could be accomplished in one try-except clause, but
         # instead we use get_or_create when creating unknown users since it has
         # built-in safeguards for multiple threads.
@@ -31,7 +30,8 @@ class LsdfUserBackend(ShibbolethRemoteUserBackend):
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 try:
-                    user = User.objects.get(email=username)
+                    email = self.clean_username(shib_user_params.get('email'))
+                    user = User.objects.get(username=email)
                     user.username = username
                 except User.DoesNotExist:
                     user = User(username=username, defaults=shib_user_params)
