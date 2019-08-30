@@ -67,8 +67,13 @@
         {{ form.directory_name|as_crispy_field }}
 
         <h2>Protocols</h2>
-        <div class="mb-2">
-            SSH, SFTP, SCP, HTTPS/Web are available in all requests.
+        <div class="form-group">
+            <div class="form-check">
+                <label for="id_protocols" class="form-check-label">
+                    <input type="checkbox" name="protocol_cifs" checked disabled id="id_protocols" class="checkboxinput form-check-input">
+                    SSH, SFTP, SCP, HTTPS/Web are enabled for all storage projects
+                </label>
+            </div>
         </div>
         {{ form.protocol_cifs|as_crispy_field }}
         {{ form.protocol_nfs|as_crispy_field }}
