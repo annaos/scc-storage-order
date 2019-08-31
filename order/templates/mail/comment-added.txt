@@ -1,0 +1,5 @@
+{% extends "mail/base.txt" %}
+{% block content-wrapper %}
+{{ comment.person }} commented your storage request by LSDF:
+{{ comment.text }}
+{% endblock %}

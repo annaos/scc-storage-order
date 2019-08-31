@@ -1,19 +1,16 @@
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import generic
-from .models.order import Order
-from .models.comment import Comment
 from .forms import *
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.forms import formset_factory
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
+from django.template.loader import get_template
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -81,13 +78,9 @@ def edit(request, pk=None):
             order = form.save()
             messages.add_message(request, messages.SUCCESS, 'Your storage request has been successfully saved.')
             if not pk:
-                message = _('Your storage request by LSDF is successfully creates ')
-                message = message + _create_html_link(request.get_host() +  reverse('order:edit', args=(order.id, )))
-                _notify(order, message)
+                _notify('created', order, request.get_host() + reverse('order:edit', args=(order.id, )))
             elif pk and old_state != order.state:
-                message = _('Your storage request by LSDF has changed it\'s state to ') + order.state
-                message = message + _create_html_link(request.build_absolute_uri())
-                _notify(order, message)
+                _notify('state-changed', order, request.build_absolute_uri())
             return HttpResponseRedirect(reverse('order:edit', args=(order.id,)))
         else:
             context['error_message'] = "Form is invalid. Please check it."
@@ -117,24 +110,25 @@ def save_comment(request, pk=None):
             comment = form.save()
             comment.order.save()
             messages.add_message(request, messages.SUCCESS, 'Your comment has been successfully saved.')
-            message = _('Your storage request by LSDF has new comment from ') + comment.person + ':\n' + comment.text
-            message = message + _create_html_link(request.build_absolute_uri())
-            _notify(comment.order, message)
+            _notify('comment-added', comment.order, request.build_absolute_uri(), comment)
     return HttpResponseRedirect(reverse('order:edit', args=(pk,)))
 
 
-def _notify(order, message):
+def _notify(template, order, url, comment=None):
     if not hasattr(settings, 'EMAIL_SENDER_ADDRESS'):
         logger.warn('There is no EMAIL_SENDER_ADDRESS. Emails can not be send.')
         return
-    email = EmailMessage(
+    context = {'order': order, 'url': url, 'comment': comment, 'persons': order.persons.all()}
+    text_content = get_template('mail/' + template + '.txt').render(context)
+    html_content = get_template('mail/' + template + '.html').render(context)
+    email = EmailMultiAlternatives(
         _('Your storage request by LSDF'),
-        message,
+        text_content,
         settings.EMAIL_SENDER_ADDRESS,
         [x.email for x in order.persons.all()],
         _get_bcc()
     )
-    email.content_subtype = "html"
+    email.attach_alternative(html_content, "text/html")
     email.send()
 
 
@@ -143,10 +137,3 @@ def _get_bcc():
     if hasattr(settings, 'EMAIL_ADMIN_ADDRESS'):
         bcc.append(settings.EMAIL_ADMIN_ADDRESS)
     return bcc
-
-
-def _create_html_link(url):
-    message = '\n<br><a href="'
-    message = message + url
-    message = message + '">Click here to see your storage request</a>'
-    return message

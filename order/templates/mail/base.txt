@@ -1,0 +1,9 @@
+{% for person in persons %}Dear {{ person }},
+{% endfor %}{% block content-wrapper %}{% endblock %}
+See your storage request here: {{ url }}
+
+
+Karlsruher Institut für Technologie
+Kaiserstraße 12
+76131 Karlsruhe
+Deutschland

@@ -1,0 +1,4 @@
+{% extends "mail/base.txt" %}
+{% block content-wrapper %}
+Your storage request by LSDF is successfully created.
+{% endblock %}
