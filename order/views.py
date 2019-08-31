@@ -118,14 +118,14 @@ def _notify(template, order, url, comment=None):
     if not hasattr(settings, 'EMAIL_SENDER_ADDRESS'):
         logger.warn('There is no EMAIL_SENDER_ADDRESS. Emails can not be send.')
         return
-    context = {'order': order, 'url': url, 'comment': comment, 'persons': order.persons.all()}
+    context = {'order': order, 'url': url, 'comment': comment, 'persons': order.persons.all().distinct()}
     text_content = get_template('mail/' + template + '.txt').render(context)
     html_content = get_template('mail/' + template + '.html').render(context)
     email = EmailMultiAlternatives(
         _('Your storage request by LSDF'),
         text_content,
         settings.EMAIL_SENDER_ADDRESS,
-        [x.email for x in order.persons.all()],
+        [x.email for x in order.persons.all().distinct()],
         _get_bcc()
     )
     email.attach_alternative(html_content, "text/html")
