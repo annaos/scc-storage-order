@@ -1,5 +1,5 @@
 {% extends "mail/base.txt" %}
 {% block content-wrapper %}
-Your storage request by LSDF has changed it's state.
+Your request for the storage project {{ order.project_name }} in the LSDF Online Storage has changed its state.
 New state is {{ order.state }}
 {% endblock %}

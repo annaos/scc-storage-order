@@ -83,7 +83,7 @@ def edit(request, pk=None):
                 _notify('state-changed', order, request.build_absolute_uri())
             return HttpResponseRedirect(reverse('order:edit', args=(order.id,)))
         else:
-            context['error_message'] = "Form is invalid. Please check it."
+            context['error_message'] = _('Form is invalid. Please check it.')
     else:
         form = form_class(instance=order, owner=request.user)
 
@@ -109,7 +109,7 @@ def save_comment(request, pk=None):
         if form.is_valid():
             comment = form.save()
             comment.order.save()
-            messages.add_message(request, messages.SUCCESS, 'Your comment has been successfully saved.')
+            messages.add_message(request, messages.SUCCESS, _('Your comment has been successfully saved.'))
             _notify('comment-added', comment.order, request.build_absolute_uri(), comment)
     return HttpResponseRedirect(reverse('order:edit', args=(pk,)))
 
@@ -122,7 +122,7 @@ def _notify(template, order, url, comment=None):
     text_content = get_template('mail/' + template + '.txt').render(context)
     html_content = get_template('mail/' + template + '.html').render(context)
     email = EmailMultiAlternatives(
-        _('Your storage request by LSDF'),
+        _('Your storage project %(name)s in the LSDF Online Storage') % {'name': order.project_name},
         text_content,
         settings.EMAIL_SENDER_ADDRESS,
         [x.email for x in order.persons.all().distinct()],

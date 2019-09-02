@@ -1,4 +1,4 @@
 {% extends "mail/base.txt" %}
 {% block content-wrapper %}
-Your storage request by LSDF is successfully created.
+Your request for the storage project {{ order.project_name }} in the LSDF Online Storage was successfully created
 {% endblock %}

@@ -2,51 +2,53 @@
 {% load static %}
 
 {% block content-wrapper %}
-    {% if latest_order_list %}
-        <h3 class="mt-2">Storage projects:</h3>
-        <table class="table" id="orders">
-        <thead>
-        <tr>
-           <th scope="col">Project Name</th>
-           <th scope="col">Head of Project</th>
-           <th scope="col">Institute</th>
-           <th scope="col">Capacity</th>
-           <th scope="col">Last changes</th>
-           <th scope="col d-none">State</th>
-        </tr>
-        </thead>
-            <tbody>
-            {% for order in latest_order_list %}
-                <tr class="alert alert-{{ order.alert_color }}" >
-                    <td style="padding-right: 50px;">
-                        <a href="{% url 'order:edit' order.id %}" class="alert-link">{{ order }}</a>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0">
-                        <p style="margin: 5px 0;">{{ order.head.first_name }} {{ order.head.last_name }}</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0">
-                        <p style="margin: 5px 0;">{{ order.head.institute }}</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0;">
-                        <p style="margin: 5px 0;">{{ order.capacity }} TB</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0;">
-                        <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y H:i" }}</p>
-                    </td>
-                    <td style="vertical-align: middle;">
-                        <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
-                    </td>
-                    <td class="d-none">
-                        {{ order.state }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No requests are available.</p>
-    {% endif %}
-
+    <div class="mt-2">
+        {% if latest_order_list %}
+            <h3>Storage projects:</h3>
+            <table class="table" id="orders">
+            <thead>
+            <tr>
+               <th scope="col">Project Name</th>
+               <th scope="col">Head of Project</th>
+               <th scope="col">Institute</th>
+               <th scope="col">Capacity</th>
+               <th scope="col">Last changes</th>
+               <th scope="col"></th>
+               <th scope="col d-none">State</th>
+            </tr>
+            </thead>
+                <tbody>
+                {% for order in latest_order_list %}
+                    <tr class="alert alert-{{ order.alert_color }}" >
+                        <td style="padding-right: 50px;">
+                            <a href="{% url 'order:edit' order.id %}" class="alert-link">{{ order }}</a>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0">
+                            <p style="margin: 5px 0;">{{ order.head.first_name }} {{ order.head.last_name }}</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0">
+                            <p style="margin: 5px 0;">{{ order.head.institute }}</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0;">
+                            <p style="margin: 5px 0;">{{ order.capacity }} TB</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0;">
+                            <p style="margin: 5px 0;">{{ order.modify_date|date:"j.n.Y H:i" }}</p>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <a href="{% url 'order:edit' order.id %}" class="btn btn-secondary">Details</a>
+                        </td>
+                        <td class="d-none">
+                            {{ order.state }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No requests are available.</p>
+        {% endif %}
+    </div>
     <div class="row mt-3 float-right mb-5">
         <div class="col-12">
             {% if user.is_staff %}
@@ -55,7 +57,6 @@
             <a href="{% url 'order:new' %}" class="btn btn-info">New request</a>
         </div>
     </div>
-
 
     <link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}"/>
     <script type="text/javascript" src="{% static 'DataTables/datatables.min.js' %}"></script>

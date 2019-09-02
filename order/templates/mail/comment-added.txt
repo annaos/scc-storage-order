@@ -1,5 +1,5 @@
 {% extends "mail/base.txt" %}
 {% block content-wrapper %}
-{{ comment.person }} commented your storage request by LSDF:
+{{ comment.person }} commented your request for the storage project {{ order.project_name }} in the LSDF Online Storage:
 {{ comment.text }}
 {% endblock %}

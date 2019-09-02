@@ -2,8 +2,7 @@
 {% endfor %}{% block content-wrapper %}{% endblock %}
 See your storage request here: {{ url }}
 
+This is an automatically generated email – please do not reply to it.
 
 Karlsruher Institut für Technologie
-Kaiserstraße 12
-76131 Karlsruhe
-Deutschland
+Steinbuch Centre for Computing

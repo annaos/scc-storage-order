@@ -1,5 +1,7 @@
 {% extends "mail/base.html" %}
 {% block content-wrapper %}
-    <p>{{ comment.person }} commented your storage request by LSDF:</p>
-    <p>{{ comment.text }}</p>
+    <p>{{ comment.person }} commented your request for the storage project {{ order.project_name }} in the LSDF Online Storage:</p>
+    <blockquote>
+        <p style="font-style: italic;">{{ comment.text }}</p>
+    </blockquote>
 {% endblock %}

@@ -1,49 +1,64 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content-wrapper %}
-    {% if persons_list %}
-        <table class="table table-striped">
-        <thead>
-        <tr>
-           <td scope="col">Username</td>
-           <td scope="col">Name</td>
-           <td scope="col">Institute</td>
-           <td scope="col">Email</td>
-           <td scope="col">Aktion</td>
-        </tr>
-        </thead>
-            <tbody>
-            {% for person in persons_list %}
-                <tr {% if person.is_staff %}class="text-danger"{% endif %}>
-                    <td style="padding-right: 50px;">
-                        <p style="margin: 5px 0;">{{ person.username }}</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0">
-                        <p style="margin: 5px 0;">{{ person.first_name }} {{ person.last_name }}</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0">
-                        <p style="margin: 5px 0;">{{ person.institute }}</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0">
-                        <p style="margin: 5px 0;">{{ person.email }}</p>
-                    </td>
-                    <td style="padding-right: 50px; margin: 0">
-                        <a href="{% url 'order:persons-admin' person.id %}">
-                            {% if person.is_staff %}
-                                remove admin rights
-                            {% else %}
-                                add admin rights
-                            {% endif %}
-                        </a>
-                   </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No persons are available.</p>
-    {% endif %}
+    <div class="mt-2 mb-3">
+        {% if persons_list %}
+            <table class="table table-striped" id="persons">
+            <thead>
+            <tr>
+               <td scope="col">Username</td>
+               <td scope="col">Name</td>
+               <td scope="col">Institute</td>
+               <td scope="col">Email</td>
+               <td scope="col">Aktion</td>
+            </tr>
+            </thead>
+                <tbody>
+                {% for person in persons_list %}
+                    <tr {% if person.is_staff %}class="text-danger"{% endif %}>
+                        <td style="padding-right: 50px;">
+                            <p style="margin: 5px 0;">{{ person.username }}</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0">
+                            <p style="margin: 5px 0;">{{ person.first_name }} {{ person.last_name }}</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0">
+                            <p style="margin: 5px 0;">{{ person.institute }}</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0">
+                            <p style="margin: 5px 0;">{{ person.email }}</p>
+                        </td>
+                        <td style="padding-right: 50px; margin: 0">
+                            <a href="{% url 'order:persons-admin' person.id %}">
+                                {% if person.is_staff %}
+                                    remove admin rights
+                                {% else %}
+                                    add admin rights
+                                {% endif %}
+                            </a>
+                       </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No persons are available.</p>
+        {% endif %}
+    </div>
 
     <a href="{% url 'order:index' %}" class="btn btn-info float-right mb-5">Home</a>
 
+    <link rel="stylesheet" type="text/css" href="{% static 'DataTables/datatables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'DataTables/datatables.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#persons').DataTable({
+                "columnDefs": [
+                    {"targets": [4], "searchable": false, "orderable": false, "visible": true},
+                ]
+            });
+        });
+    </script>
 {% endblock %}
