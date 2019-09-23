@@ -54,7 +54,9 @@ class OrderSimpleForm(ModelForm):
     def __init__(self, owner=None, *args, **kwargs):
         if kwargs.get('instance'):
             initial = kwargs.setdefault('initial', {})
-            owner_person = owner
+            owner_person = kwargs['instance'].owner()
+            if owner_person is None:
+                owner_person = owner
             if owner_person is not None:
                 initial['owner_email'] = owner_person.email
                 initial['owner_institute'] = owner_person.institute
