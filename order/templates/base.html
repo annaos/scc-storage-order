@@ -97,6 +97,13 @@
         if (typeof(disable_faq) != 'boolean') {
             collapseFAQ();
         }
+
+        $("body").on("submit", "form", function() {
+            $(this).submit(function() {
+                return false;
+            });
+            return true;
+        });
     </script>
 {% endblock %}
 </body>
