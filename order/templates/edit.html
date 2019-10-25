@@ -18,9 +18,11 @@
         <div class="alert alert-{{ order.alert_color }} float-right">{{ order.state }}</div>
     {% endif %}
 
-    <a role="button" href="#" class="btn btn-primary mr-2 float-right btn_add_comment">
-        Add comment
-    </a>
+    {% if pk %}
+        <a role="button" href="#" class="btn btn-primary mr-2 float-right btn_add_comment">
+            Add comment
+        </a>
+    {% endif %}
 
     <form action="{% if pk %}{% url 'order:edit' pk %}{% else %}{% url 'order:new' %}{% endif %}"
           class="mb-5"
